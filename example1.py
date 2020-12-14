@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# Условие задания
 # Использовать словарь, содержащий следующие ключи: фамилия и инициалы
 # работника; название занимаемой должности; год поступления на работу. Написать
 # программу, выполняющую следующие действия:
@@ -10,7 +9,6 @@
 # вывод на дисплей фамилий работников, чей стаж работы в организации превышает
 # значение, введенное с клавиатуры;
 # если таких работников нет, вывести на дисплей соответствующее сообщение.
-
 from datetime import date
 import sys
 
@@ -33,64 +31,63 @@ if __name__ == '__main__':
                 'post': post,
                 'year': year,
             }
-
             workers.append(worker)
             if len(workers) > 1:
                 workers.sort(key=lambda item: item.get('name', ''))
 
-            elif command == 'list':
-                line = '+-{}-+-{}-+-{}-+-{}-+'.format(
-                    '-' * 4,
-                    '-' * 30,
-                    '-' * 20,
-                    '-' * 8
+        elif command == 'list':
+            line = '+-{}-+-{}-+-{}-+-{}-+'.format(
+                '-' * 4,
+                '-' * 30,
+                '-' * 20,
+                '-' * 8
+            )
+            print(line)
+            print(
+                ' | {:^4} | {:^30} | {:^20} | {:^8} |'.format(
+                    "№",
+                    "Ф.И.О.",
+                    "Должность",
+                    "Год"
                 )
-                print(line)
+            )
+            print(line)
+
+            for idx, worker in enumerate(workers, 1):
                 print(
-                    ' | {:^4} | {:^30} | {:^20} | {:^8} |'.format(
-                        "№",
-                        "Ф.И.О.",
-                        "Должность",
-                        "Год"
+                    '| {:>4} | {:<30} | {:<20} | {:>8} |'.format(
+                        idx,
+                        worker.get('name', ''),
+                        worker.get('post', ''),
+                        worker.get('year', 0)
                     )
                 )
+
                 print(line)
 
-                for idx, worker in enumerate(workers, 1):
+        elif command.startswith('select '):
+            today = date.today()
+
+            parts = command.split(' ', maxsplit=1)
+            period = int(parts[1])
+
+            count = 0
+            for worker in workers:
+                if today.year - worker.get('year', today.year) >= period:
+                    count += 1
                     print(
-                        '| {:>4} | {:<30} | {:<20} | {:>8} |'.format(
-                            idx,
-                            worker.get('name', ''),
-                            worker.get('post', ''),
-                            worker.get('year', 0)
-                        )
+                        '{:>4}: {}'.format(count, worker.get('name', ''))
                     )
-
-                print(line)
-
-            elif command.startswith('select '):
-                today = date.today()
-
-                parts = command.split(' ', maxsplit=1)
-                period = int(parts[1])
-
-                count = 0
-                for worker in workers:
-                    if today.year - worker.get('year', today.year) >= period:
-                        count += 1
-                        print(
-                            '{:>4}: {}'.format(count, worker.get('name', ''))
-                        )
                 if count == 0:
                     print("Работники с заданным стажем не найдены.")
 
-            elif command == 'help':
-                print("Список команд:\n")
-                print("add - добавить работника;")
-                print("list - вывести список работников;")
-                print("select <стаж> - запросить работников со стажем;")
-                print("help - отобразить справку;")
-                print("exit - завершить работу с программой.")
+        elif command == 'help':
+            print("Список команд:\n")
+            print("add - добавить работника;")
+            print("list - вывести список работников;")
+            print("select <стаж> - запросить работников со стажем;")
+            print("help - отобразить справку;")
+            print("exit - завершить работу с программой.")
 
-            else:
-                print(f"Неизвестная команда {command}", file=sys.stderr)
+        else:
+            print(f"Неизвестная команда {command}", file=sys.stderr)

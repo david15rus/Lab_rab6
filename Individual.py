@@ -3,6 +3,7 @@
 
 from datetime import date
 import sys
+
 # Условние задания
 # Использовать словарь, содержащий следующие ключи: название товара; название
 # магазина, в котором продается товар; стоимость товара в руб. Написать программу,
@@ -23,18 +24,18 @@ if __name__ == '__main__':
 
         elif command == 'add':
             name = input("Название товара? ")
-            coast = int(input("Его стоимость? "))
             shop = input("Название магазина? ")
+            coast = int(input("Введите его цену "))
 
             product = {
                 'name': name,
-                'coast': сoast,
-                'shop': shop
+                'shop': shop,
+                'coast': coast,
             }
 
             products.append(product)
-            if len(workers) > 1:
-                workers.sort(key=lambda item: item.get('name', ''))
+            if len(product) > 1:
+                products.sort(key=lambda item: item.get('name', ''))
 
         elif command == 'list':
             line = '+-{}-+-{}-+-{}-+-{}-+'.format(
@@ -48,8 +49,8 @@ if __name__ == '__main__':
                 ' | {:^4} | {:^30} | {:^20} | {:^8} |'.format(
                     "№",
                     "Наименование товара",
-                    "Стоимость",
-                    "Название магазина"
+                    "Название магазина",
+                    "Стоимость"
                 )
             )
             print(line)
@@ -58,23 +59,23 @@ if __name__ == '__main__':
                 print(
                     '| {:>4} | {:<30} | {:<20} | {:>8} |'.format(
                         idx,
-                        worker.get('name', ''),
-                        worker.get('coast', 0),
-                        worker.get('shop', '')
+                        product.get('name', ''),
+                        product.get('shop', ''),
+                        product.get('coast', 0)
                     )
                 )
 
             print(line)
 
-        elif command.startswith('select '):
+        elif command.startswith('select'):
             name_user = input("Введите название интересующего магазина ")
 
             count = 0
             for product in products:
-                if name_user == product.key(shop):
+                if name_user == product.get('shop'):
                     count += 1
                     print(
-                        '{:>4}: {}'.format(count, product.get('coast', ''))
+                        '{:>4}: {} {}'.format(count, product.get('coast', ' '), product.get('name', ' '))
                     )
             if count == 0:
                 print("Магазин с таким названием не найден")
